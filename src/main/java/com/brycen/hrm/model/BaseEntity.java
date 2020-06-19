@@ -40,7 +40,7 @@ public class BaseEntity {
     @Column(name = "lastmodifiedby")
     private String lastModifiedBy;
     
-    @Column(name = "iddelete", columnDefinition="tinyint(0)")
+    @Column(name = "isdelete", columnDefinition="tinyint(0)")
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private boolean isDelete;
     

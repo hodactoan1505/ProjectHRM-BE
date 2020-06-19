@@ -3,6 +3,15 @@ package com.brycen.hrm.response.object;
 public class ProjectResponse extends BaseResponse {
     private int id;
     private String name;
+    private DepartmentResponse department;
+
+    public DepartmentResponse getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(DepartmentResponse department) {
+        this.department = department;
+    }
 
     public ProjectResponse() {
 

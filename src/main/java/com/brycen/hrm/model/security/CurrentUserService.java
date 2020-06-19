@@ -6,14 +6,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.brycen.hrm.model.UserEntity;
-import com.brycen.hrm.repository.UserRepository;
+import com.brycen.hrm.model.EmployeeEntity;
+import com.brycen.hrm.repository.EmployeeRepository;
 
 @Service
 public class CurrentUserService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private EmployeeRepository employeeRepository;
 
     /* (non-Javadoc)
      * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
@@ -22,7 +22,7 @@ public class CurrentUserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity entity = userRepository.findByUsername(username);
+        EmployeeEntity entity = employeeRepository.findByUsername(username);
 
         if (entity == null) {
             throw new UsernameNotFoundException(username);

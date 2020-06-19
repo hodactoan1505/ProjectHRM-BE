@@ -1,9 +1,12 @@
 package com.brycen.hrm.response.object;
 
-public class UserResponse extends BaseResponse{
+public class UserResponse extends BaseResponse {
     private String username;
     private RoleResponse role;
-    private int employeeid;
+    private DepartmentResponse department;
+    private ProjectResponse project;
+    private String name;
+    private int id;
 
     public UserResponse() {
 
@@ -25,14 +28,36 @@ public class UserResponse extends BaseResponse{
         this.role = role;
     }
 
-    public int getEmployeeid() {
-        return employeeid;
+    public DepartmentResponse getDepartment() {
+        return department;
     }
 
-    public void setEmployeeid(int employeeid) {
-        this.employeeid = employeeid;
+    public void setDepartment(DepartmentResponse department) {
+        this.department = department;
     }
 
-   
+    public ProjectResponse getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectResponse project) {
+        this.project = project;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }

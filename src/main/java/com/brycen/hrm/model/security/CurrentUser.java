@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.brycen.hrm.model.UserEntity;
+import com.brycen.hrm.model.EmployeeEntity;
 
 /**
  * [Description]:Class convert userEntity to UserDetail of security use [ Remarks ]:<br>
@@ -21,28 +21,28 @@ public class CurrentUser implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Autowired
-    private UserEntity userEntity;
+    private EmployeeEntity employeeEntity;
 
-    public CurrentUser(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public CurrentUser(EmployeeEntity employeeEntity) {
+        this.employeeEntity = employeeEntity;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // TODO Auto-generated method stub
-        return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole().getName()));
+        return Collections.singleton(new SimpleGrantedAuthority(employeeEntity.getRole().getName()));
     }
 
     @Override
     public String getPassword() {
         // TODO Auto-generated method stub
-        return userEntity.getPassword();
+        return employeeEntity.getPassword();
     }
 
     @Override
     public String getUsername() {
         // TODO Auto-generated method stub
-        return userEntity.getUsername();
+        return employeeEntity.getUsername();
     }
 
     @Override

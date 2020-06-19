@@ -10,7 +10,7 @@ import com.brycen.hrm.response.object.BaseResponse;
  * @author Brycen VietNam Company
  * @version 1.0
  */
-public class UserRequest extends BaseResponse{
+public class UserRequest {
     private String username;
     private String password;
     

@@ -32,6 +32,9 @@ public class EmployeeEntity extends BaseEntity {
     private String skype;
     private String experience;
     private String queQuan;
+    private String username;
+    private String password;
+    
     @Lob
     private String avatar;
 
@@ -57,11 +60,12 @@ public class EmployeeEntity extends BaseEntity {
     @JoinColumn(name = "projectid")
     private ProjectEntity project;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-    private UserEntity user;
-
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<EmployeeSkillEntity> skills;
+
+    @OneToOne
+    @JoinColumn(name = "roleid")
+    private RoleEntity role;
 
     public String getName() {
         return name;
@@ -175,14 +179,6 @@ public class EmployeeEntity extends BaseEntity {
         this.project = project;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
     public List<EmployeeSkillEntity> getSkills() {
         return skills;
     }
@@ -194,7 +190,7 @@ public class EmployeeEntity extends BaseEntity {
     public int getId() {
         return id;
     }
-    
+
     public String getAvatar() {
         return avatar;
     }
@@ -203,7 +199,31 @@ public class EmployeeEntity extends BaseEntity {
         this.avatar = avatar;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public EmployeeEntity() {
-        
+
     }
 }

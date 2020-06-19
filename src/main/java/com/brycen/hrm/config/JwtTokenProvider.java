@@ -27,7 +27,7 @@ public class JwtTokenProvider {
 	private final String JWT_SECRET = "brycen";
 	private final int JWT_EXPIRATION = 6000000;
 	
-	public String generateToken(CurrentUser currentUser, UserResponse userResponse) {
+	public String generateToken(CurrentUser currentUser, UserResponse employeeResponse) {
 		Date now = new Date();
 		Date expiration = new Date(now.getTime() + JWT_EXPIRATION);
 
@@ -36,7 +36,7 @@ public class JwtTokenProvider {
 					.setIssuedAt(now)
 					.setExpiration(expiration)
 					.signWith(SignatureAlgorithm.HS512, JWT_SECRET)
-					.claim("userReponse", userResponse)
+					.claim("employee", employeeResponse)
 					.compact();
 	}
 	

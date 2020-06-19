@@ -1,6 +1,5 @@
 package com.brycen.hrm.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,12 +15,12 @@ public class RoleEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    
+
     @Lob
     private String screen;
 
-    @OneToOne(mappedBy = "role", cascade = CascadeType.ALL)
-    private UserEntity user;
+    @OneToOne(mappedBy = "role")
+    private EmployeeEntity employee;
 
     public RoleEntity() {
 
@@ -43,12 +42,12 @@ public class RoleEntity extends BaseEntity {
         this.screen = screen;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public EmployeeEntity getEmployee() {
+        return employee;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setEmployee(EmployeeEntity employee) {
+        this.employee = employee;
     }
 
     public int getId() {

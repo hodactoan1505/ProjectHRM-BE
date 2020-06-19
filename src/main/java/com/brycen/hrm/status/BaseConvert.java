@@ -12,7 +12,6 @@ import com.brycen.hrm.model.EmployeeSkillEntity;
 import com.brycen.hrm.model.ProjectEntity;
 import com.brycen.hrm.model.RoleEntity;
 import com.brycen.hrm.model.SkillEntity;
-import com.brycen.hrm.model.UserEntity;
 import com.brycen.hrm.repository.SkillRepository;
 import com.brycen.hrm.response.object.DepartmentResponse;
 import com.brycen.hrm.response.object.EmployeeResponse;
@@ -60,20 +59,27 @@ public class BaseConvert {
      * @param userEntity
      * @return
      */
-    public UserResponse userToResponse(UserEntity userEntity) {
+    public UserResponse userToResponse(EmployeeEntity entity) {
         UserResponse userResponse = new UserResponse();
-        userResponse.setUsername(userEntity.getUsername());
-        userResponse.setEmployeeid(userEntity.getEmployee().getId());
+        userResponse.setUsername(entity.getUsername());
+        userResponse.setName(entity.getName());
+        userResponse.setId(entity.getId());
+        
+        // set Department
+        DepartmentResponse resDepartment = new DepartmentResponse();
+        resDepartment = departmentToResponse(entity.getDepartment());
+        userResponse.setDepartment(resDepartment);
 
+        // set Project
+        ProjectResponse resProject = new ProjectResponse();
+        resProject = projectToResponse(entity.getProject());
+        userResponse.setProject(resProject);
+        
         // Convert Entity => roleResponse
-        RoleResponse roleResponse = roleToResponse(userEntity.getRole());
+        RoleResponse roleResponse = roleToResponse(entity.getRole());
         userResponse.setRole(roleResponse);
 
-        // Covert Base entity => Response
-        userResponse.setCreateDate(userEntity.getCreateDate().toString());
-        userResponse.setCreateBy(userEntity.getCreateBy());
-        userResponse.setLastModifiedBy(userEntity.getLastModifiedBy());
-        userResponse.setLastModifiedDate(userEntity.getLastModifiedDate().toString());
+
         return userResponse;
     }
 
@@ -107,7 +113,12 @@ public class BaseConvert {
         ProjectResponse response = new ProjectResponse();
         response.setId(entity.getId());
         response.setName(entity.getName());
-
+        
+        // Covert Department Entity => Response
+        DepartmentResponse resDepartment = new DepartmentResponse();
+        resDepartment = departmentToResponse(entity.getDepartment());
+        response.setDepartment(resDepartment);
+        
         // Covert Base entity => Response
         response.setCreateDate(entity.getCreateDate().toString());
         response.setCreateBy(entity.getCreateBy());
@@ -162,7 +173,7 @@ public class BaseConvert {
      * @param entity
      * @return
      */
-    public EmployeeResponse EmployeeToResponse(EmployeeEntity entity) {
+    public EmployeeResponse employeeToResponse(EmployeeEntity entity) {
 
         EmployeeResponse response = new EmployeeResponse();
         response.setId(entity.getId());
@@ -185,7 +196,14 @@ public class BaseConvert {
         List<SkillResponse> listSkill = new ArrayList<SkillResponse>();
         listSkill = skillEntityToResponse(entity.getSkills());
         response.setSkills(listSkill);
-
+        
+        
+        // Covert Base entity => Response
+        response.setCreateDate(entity.getCreateDate().toString());
+        response.setCreateBy(entity.getCreateBy());
+        response.setLastModifiedBy(entity.getLastModifiedBy());
+        response.setLastModifiedDate(entity.getLastModifiedDate().toString());
+        
         return response;
     }
 
