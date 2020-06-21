@@ -1,7 +1,5 @@
 package com.brycen.hrm.request;
 
-import com.brycen.hrm.response.object.BaseResponse;
-
 /**
  * [Description]:Đối tượng UserRequest được gửi lên Server
  * [ Remarks ]:<br>

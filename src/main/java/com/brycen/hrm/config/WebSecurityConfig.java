@@ -46,10 +46,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		    .csrf().disable()
 		    .authorizeRequests()
 			.antMatchers("/login").permitAll()
+			.antMatchers("/department").permitAll()
+			.antMatchers("/project").permitAll()
+			.antMatchers("/skill").permitAll()
 			.antMatchers("/employee/view").permitAll()
 			.antMatchers("/employee").hasAnyAuthority("admin", "manager", "department", "leader")
+			.antMatchers("/employee/add").hasAnyAuthority("admin")
 			.antMatchers("/user/**").hasAnyAuthority("admin")
-			.anyRequest().authenticated();
+			.anyRequest().denyAll();
 		
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}

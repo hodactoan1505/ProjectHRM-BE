@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brycen.hrm.request.EmployeeRequest;
@@ -14,6 +13,7 @@ import com.brycen.hrm.response.Response;
 import com.brycen.hrm.service.DepartmentService;
 import com.brycen.hrm.service.EmployeeService;
 import com.brycen.hrm.service.ProjectService;
+import com.brycen.hrm.service.SkillService;
 
 @CrossOrigin
 @RestController
@@ -28,6 +28,9 @@ public class HomeController {
     @Autowired
     private ProjectService projectService;
     
+    @Autowired
+    private SkillService skillService;
+    
     /**
      * [Description]: Xử lý đăng nhập
      * [ Remarks ]:<br/>
@@ -36,7 +39,7 @@ public class HomeController {
      * @return Response
      */
     @PostMapping("/login")
-    public Response login(@RequestBody UserRequest userRequest) {
+    public Response login(@RequestBody UserRequest userRequest) {   	
         return employeeService.login(userRequest);
     }
     
@@ -45,18 +48,23 @@ public class HomeController {
         return employeeService.getEmployee(employeeRequest);
     }
     
-    @GetMapping("/employee/view")
-    public String viewEmployee() {
-        return "abc";
+    @PostMapping("/employee/add")
+    public Response addEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        return employeeService.addEmployee(employeeRequest);
     }
     
-    @GetMapping("/department")
-    public Response getDepartment() {
-        return departmentService.getAllDepartment();
+    @PostMapping("/department")
+    public Response getDepartment(@RequestBody EmployeeRequest employeeRequest) {
+        return departmentService.getDepartment(employeeRequest);
     }
     
-    @GetMapping("/project")
-    public Response getProject() {
-        return projectService.getAllProject();
+    @PostMapping("/project")
+    public Response getProject(@RequestBody EmployeeRequest employeeRequest) {
+        return projectService.getAllProject(employeeRequest);
+    }
+    
+    @GetMapping("/skill")
+    public Response getSkill() {
+    	return skillService.getAllSkill();
     }
 }

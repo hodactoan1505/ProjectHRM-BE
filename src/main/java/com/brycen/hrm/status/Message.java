@@ -25,4 +25,39 @@ public class Message {
      * Trả về khi user không tồn tại
      */
     public static String user_not_found = "User not found";
+    
+    /**
+     * Trả về khi phòng ban không tồn tại
+     */
+    public static String department_not_found = "Department not found";
+    
+    /**
+     * Trả về khi Skill không tồn tại
+     */
+    public static String skill_not_found = "Skill not found";
+    
+    /**
+     * Trả về khi dự án không tồn tại
+     */
+    public static String project_not_found = "Project not found";
+    
+    /**
+     * Trả về khi họ tên đang bị null hoặc rỗng
+     */
+    public static String name_not_empty = "Name not empty";
+    
+    /**
+     * Trả về khi danh sách skill đang rỗng
+     */
+    public static String skill_not_empty = "Have at least one skill";
+    
+    /**
+     * Trả về khi phòng ban đang rỗng
+     */
+    public static String department_not_empty = "Department not empty";
+    
+    /**
+     * Trả về khi dự án đang rỗng
+     */
+    public static String project_not_empty = "Project not empty";
 }
