@@ -41,6 +41,12 @@ public class Message {
      */
     public static String project_not_found = "Project not found";
     
+    
+    /**
+     * Trả về khi nhân viên không tồn tại
+     */
+    public static String employee_not_found = "Employee not found";
+    
     /**
      * Trả về khi họ tên đang bị null hoặc rỗng
      */
@@ -60,4 +66,9 @@ public class Message {
      * Trả về khi dự án đang rỗng
      */
     public static String project_not_empty = "Project not empty";
+    
+    /**
+     * Trả về khi danh sách id của nhân viên xóa không có
+     */
+    public static String list_employee_id_empty = "Danh sách nhân viên xóa không có";
 }

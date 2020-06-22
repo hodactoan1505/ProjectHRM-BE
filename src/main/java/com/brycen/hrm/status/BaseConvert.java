@@ -92,6 +92,9 @@ public class BaseConvert {
 		DepartmentResponse resDepartment = new DepartmentResponse();
 		resDepartment.setId(departmentEntity.getId());
 		resDepartment.setName(departmentEntity.getName());
+		resDepartment.setStartDate(departmentEntity.getStartDate());
+		resDepartment.setDescription(departmentEntity.getDescription());
+		resDepartment.setPersions(departmentEntity.getEmployees().size());
 
 		// Covert Base entity => Response
 		resDepartment.setCreateDate(departmentEntity.getCreateDate().toString());
@@ -175,7 +178,7 @@ public class BaseConvert {
 		response.setGmail(entity.getGmail());
 		response.setSkype(entity.getSkype());
 		response.setAddress(entity.getAddress());
-		response.setBirthday((entity.getAddress() != null) ? entity.getAddress().toString() : null);
+		response.setBirthday((entity.getBirthday() != null) ? entity.getBirthday().toString() : null);
 		response.setExperience(entity.getExperience());
 		response.setQueQuan(entity.getQueQuan());
 		response.setAvatar(entity.getAvatar());
@@ -185,16 +188,18 @@ public class BaseConvert {
 		response.setJoinCompany((entity.getJoinCompany() != null) ? entity.getJoinCompany().toString() : null);
 
 		// set Department
+		List<DepartmentResponse> listDepartment = new ArrayList<DepartmentResponse>();
 		DepartmentResponse resDepartment = new DepartmentResponse();
 		resDepartment = departmentToResponse(entity.getDepartment());
-		response.setDepartment(resDepartment);
+		listDepartment.add(resDepartment);
+		response.setDepartment(listDepartment);
 
 		// set Project
+		List<ProjectResponse> listProject = new ArrayList<ProjectResponse>();
 		ProjectResponse resProject = new ProjectResponse();
-		if(entity.getProject()!=null) {
-			resProject = projectToResponse(entity.getProject());
-			response.setProject(resProject);
-		}
+		resProject = projectToResponse(entity.getProject());
+		listProject.add(resProject);
+		response.setProject(listProject);
 
 		// set Skill
 		List<SkillResponse> listSkill = new ArrayList<SkillResponse>();

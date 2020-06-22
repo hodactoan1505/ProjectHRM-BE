@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
+import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.brycen.hrm.config.JwtTokenProvider;
@@ -38,10 +41,13 @@ import com.brycen.hrm.service.EmployeeService;
 import com.brycen.hrm.status.BaseConvert;
 import com.brycen.hrm.status.Code;
 import com.brycen.hrm.status.Message;
+import com.google.gson.Gson;
 
 @Service
 public class EmployeeImpl implements EmployeeService {
-
+    private static final Logger logger = Logger.getLogger(EmployeeImpl.class);
+    
+    private Gson gson = new Gson();
 	@Autowired
 	private EntityManager entityManager;
 
@@ -96,9 +102,11 @@ public class EmployeeImpl implements EmployeeService {
 			jwt = jwtTokenProvider.generateToken((CurrentUser) authentication.getPrincipal(), userResponse);
 
 			response.setData(jwt);
+			logger.info("login => [Request]" + gson.toJson(userRequest)+ "[Response]"+ gson.toJson(response));
 		} catch (Exception e) {
 			response.setCode(Code.login_fail);
 			response.setMessage(e.getMessage());
+			logger.error("login =>" + gson.toJson(response));
 		}
 		return response;
 	}
@@ -159,10 +167,11 @@ public class EmployeeImpl implements EmployeeService {
 			}
 
 			response.setData(listEmpReponse);
-
+			logger.info(SecurityContextHolder.getContext().getAuthentication().getName() +  " getEmployee => [Request]"+gson.toJson(employeeRequest)+"[Reponse]" + gson.toJson(response));
 		} catch (Exception e) {
 			response.setCode(Code.unknown);
 			response.setMessage(e.getMessage());
+			logger.error("getEmployee =>" + gson.toJson(response));
 		}
 		return response;
 	}
@@ -250,12 +259,13 @@ public class EmployeeImpl implements EmployeeService {
 			entity.setMarried(employeeRequest.isMarried());
 			entity.setDepartment(oDepartment.get());
 			entity.setProject(pOptional.get());
+			
 			// Kiểm tra ngày sinh có null không
 			if(employeeRequest.getBirthday() != null) {
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = sdf1.parse(employeeRequest.getBirthday());
 				java.sql.Date birthday = new java.sql.Date(date.getTime());
-				entity.setBirthday(birthday);
+				entity.setBirthday(birthday.toString());
 			}
 			
 			// Kiểm tra ngày vào công ty có null không
@@ -263,7 +273,7 @@ public class EmployeeImpl implements EmployeeService {
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = sdf1.parse(employeeRequest.getJoinCompany());
 				java.sql.Date joinCompany = new java.sql.Date(date.getTime());
-				entity.setJoinCompany(joinCompany);
+				entity.setJoinCompany(joinCompany.toString());
 			}
 			
 			// Kiểm tra ngày hết hạn thử việc có null không
@@ -271,7 +281,7 @@ public class EmployeeImpl implements EmployeeService {
 				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = sdf1.parse(employeeRequest.getFinishTraning());
 				java.sql.Date finishTraning = new java.sql.Date(date.getTime());
-				entity.setFinishTraning(finishTraning);
+				entity.setFinishTraning(finishTraning.toString());
 			}
 			
 			employeeRepo.save(entity);
@@ -288,13 +298,194 @@ public class EmployeeImpl implements EmployeeService {
 					}
 				}
 			}
-			
+			logger.info(SecurityContextHolder.getContext().getAuthentication().getName() + " addEmployee => [Request]"+gson.toJson(employeeRequest)+"[Reponse]" + gson.toJson(response));
 			
 		} catch (Exception e) {
 			response.setCode(Code.unknown);
 			response.setMessage(e.getMessage());
+			logger.error(SecurityContextHolder.getContext().getAuthentication().getName() + " addEmployee => " + gson.toJson(response));
 		}
 		return response;
 	}
 
+    @Override
+    public Response updateEmployee(EmployeeRequest employeeRequest) {
+        Response response = new Response();
+        try {
+             Optional<EmployeeEntity> eOptional = employeeRepo.findById(employeeRequest.getId());
+             
+             if(eOptional.orElse(null) == null) {
+                 response.setCode(Code.employee_not_found);
+                 response.setMessage(Message.employee_not_found);
+                 return response;
+             }
+             
+             EmployeeEntity entity = eOptional.get();
+            
+            // Kiểm tra tên có rỗng hay không
+            if (employeeRequest.getName() == null || employeeRequest.getName().trim() == "") {
+                response.setCode(Code.name_not_empty);
+                response.setMessage(Message.name_not_empty);
+                return response;
+            }
+
+            // Kiểm tra kĩ năng
+            if (employeeRequest.getSkills() == null || employeeRequest.getSkills().isEmpty()) {
+                response.setCode(Code.skill_not_empty);
+                response.setMessage(Message.skill_not_empty);
+                return response;
+            }
+            
+            // Kiểm tra danh sách kĩ năng có tồn tại không
+            List<SkillEntity> dbSkill = skillRepository.findAll();
+            for (SkillRequest resSkill : employeeRequest.getSkills()) {
+                boolean flag = false;
+                for (SkillEntity skillentity : dbSkill) {
+                    if(resSkill.getId() == skillentity.getId()) {
+                        flag = true;
+                        break;
+                    }
+                    
+                }
+                if(!flag) {
+                    response.setCode(Code.skill_not_found);
+                    response.setMessage(resSkill.getName() + " " + Message.skill_not_found);
+                    return response;
+                }
+            }
+            
+
+            // Kiểm tra bộ phận
+            if (employeeRequest.getDepartment() == null) {
+                response.setCode(Code.department_not_empty);
+                response.setMessage(Message.department_not_empty);
+                return response;
+            }
+            
+            // Kiểm tra phòng ban có tồn tại hay không ?
+            int departmentId = employeeRequest.getDepartment().get(0).getId();
+            Optional<DepartmentEntity> oDepartment = departmentRepository.findById(departmentId);
+            if(oDepartment.orElse(null) == null) {
+                response.setCode(Code.department_not_found);
+                response.setMessage(Message.department_not_found);
+                return response;
+            }
+            
+            // Kiểm tra dự án
+            if (employeeRequest.getProject() == null) {
+                response.setCode(Code.project_not_empty);
+                response.setMessage(Message.project_not_empty);
+                return response;
+            }
+            
+            // Kiểm tra dự án có tồn tại hay không ?
+            int projectId = employeeRequest.getProject().get(0).getId();
+            Optional<ProjectEntity> pOptional = projectRepository.findById(projectId);
+            if(pOptional.orElse(null) == null) {
+                response.setCode(Code.project_not_found);
+                response.setMessage(Message.project_not_found);
+                return response;
+            }
+            
+            entity.setName(employeeRequest.getName());
+            entity.setExperience(employeeRequest.getExperience());
+            entity.setAddress(employeeRequest.getAddress());
+            entity.setPhone(employeeRequest.getPhone());
+            entity.setGmail(employeeRequest.getGmail());
+            entity.setSkype(employeeRequest.getSkype());
+            entity.setQueQuan(employeeRequest.getQueQuan());
+            entity.setAvatar(employeeRequest.getAvatar());
+            entity.setSex(employeeRequest.isSex());
+            entity.setMarried(employeeRequest.isMarried());
+            entity.setDepartment(oDepartment.get());
+            entity.setProject(pOptional.get());
+            
+            // Kiểm tra ngày sinh có null không
+            if(employeeRequest.getBirthday() != null) {
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date date = sdf1.parse(employeeRequest.getBirthday());
+                java.sql.Date birthday = new java.sql.Date(date.getTime());
+                entity.setBirthday(birthday.toString());
+            }
+            
+            // Kiểm tra ngày vào công ty có null không
+            if(employeeRequest.getJoinCompany() != null) {
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date date = sdf1.parse(employeeRequest.getJoinCompany());
+                java.sql.Date joinCompany = new java.sql.Date(date.getTime());
+                entity.setJoinCompany(joinCompany.toString());
+            }
+            
+            // Kiểm tra ngày hết hạn thử việc có null không
+            if(employeeRequest.getFinishTraning() != null) {
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date date = sdf1.parse(employeeRequest.getFinishTraning());
+                java.sql.Date finishTraning = new java.sql.Date(date.getTime());
+                entity.setFinishTraning(finishTraning.toString());
+            }
+            
+            // Lưu thông tin thay đổi
+            employeeRepo.save(entity);
+            
+            // Xóa các kĩ năng cũ
+            employeeSkillRepository.deleteSkillofEmp(entity.getId());
+            
+            // Set danh sách kĩ năng
+            for (SkillRequest request : employeeRequest.getSkills()) {
+                for (SkillEntity skillEntity : dbSkill) {
+                    if(request.getId() == skillEntity.getId()) {
+                        EmployeeSkillEntity empskill = new EmployeeSkillEntity();
+                        empskill.setEmployee(entity);
+                        empskill.setSkill(skillEntity);
+                        
+                        employeeSkillRepository.save(empskill);
+                    }
+                }
+            }
+            logger.info(SecurityContextHolder.getContext().getAuthentication().getName() + " updateEmployee => [Request]"+gson.toJson(employeeRequest)+"[Reponse]" + gson.toJson(response));
+        } catch (Exception e) {
+            response.setCode(Code.unknown);
+            response.setMessage(e.getMessage());
+            logger.error(SecurityContextHolder.getContext().getAuthentication().getName() + " updateEmployee => " + gson.toJson(response));
+        }
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public Response deleteEmployee(List<Integer> list) {
+        Response response = new Response();
+        try {
+            
+            if(list.isEmpty()) {
+                response.setCode(Code.list_employee_id_empty);
+                response.setMessage(Message.list_employee_id_empty);
+                return response;
+            }
+            
+            String update = " UPDATE employee ";
+            String set = " SET employee.isdelete = 1 ";
+            String where = " ";
+            for (int i = 0; i < list.size(); i++) {
+                if(i == 0) {
+                    where += " WHERE employee.id = " + list.get(0);
+                }else {
+                    where += " and employee.id " + list.get(i);
+                }
+            }
+            
+            String nativeQuery = update + set + where;
+            entityManager.createNativeQuery(nativeQuery,EmployeeEntity.class).executeUpdate();            
+            logger.info(SecurityContextHolder.getContext().getAuthentication().getName() + " deleteEmployee => [Request]"+gson.toJson(list)+"[Reponse]" + gson.toJson(response));
+        } catch (Exception e) {
+            response.setCode(Code.unknown);
+            response.setMessage(e.getMessage());
+            logger.error(SecurityContextHolder.getContext().getAuthentication().getName() + " deleteEmployee => " + gson.toJson(response));
+        }
+        return response;
+    }
+	
+	
+	
+	
 }

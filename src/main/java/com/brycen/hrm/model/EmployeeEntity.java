@@ -1,6 +1,5 @@
 package com.brycen.hrm.model;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,7 +25,7 @@ public class EmployeeEntity extends BaseEntity {
     private int id;
     private String name;
     private String address;
-    private Date birthday;
+    private String birthday;
     private String phone;
     private String gmail;
     private String skype;
@@ -34,7 +33,7 @@ public class EmployeeEntity extends BaseEntity {
     private String queQuan;
     private String username;
     private String password;
-    
+
     @Lob
     private String avatar;
 
@@ -47,10 +46,10 @@ public class EmployeeEntity extends BaseEntity {
     private boolean married;
 
     @Column(name = "finishtraning")
-    private Date finishTraning;
+    private String finishTraning;
 
     @Column(name = "joincompany")
-    private Date joinCompany;
+    private String joinCompany;
 
     @ManyToOne
     @JoinColumn(name = "departmentid")
@@ -83,12 +82,28 @@ public class EmployeeEntity extends BaseEntity {
         this.address = address;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public String getFinishTraning() {
+        return finishTraning;
+    }
+
+    public void setFinishTraning(String finishTraning) {
+        this.finishTraning = finishTraning;
+    }
+
+    public String getJoinCompany() {
+        return joinCompany;
+    }
+
+    public void setJoinCompany(String joinCompany) {
+        this.joinCompany = joinCompany;
     }
 
     public String getPhone() {
@@ -145,22 +160,6 @@ public class EmployeeEntity extends BaseEntity {
 
     public void setMarried(boolean married) {
         this.married = married;
-    }
-
-    public Date getFinishTraning() {
-        return finishTraning;
-    }
-
-    public void setFinishTraning(Date finishTraning) {
-        this.finishTraning = finishTraning;
-    }
-
-    public Date getJoinCompany() {
-        return joinCompany;
-    }
-
-    public void setJoinCompany(Date joinCompany) {
-        this.joinCompany = joinCompany;
     }
 
     public DepartmentEntity getDepartment() {

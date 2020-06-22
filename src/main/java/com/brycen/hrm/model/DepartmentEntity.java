@@ -8,12 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * [Description]:Entity Department of system.
- * [ Remarks ]:<br>
+ * [Description]:Entity Department of system. [ Remarks ]:<br>
  * [Copyright]: Copyright (c) 2020<br>
  * 
  * @author Brycen VietNam Company
@@ -34,6 +34,28 @@ public class DepartmentEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<EmployeeEntity> employees;
+    
+    @Column(name = "startdate")
+    private String startDate;
+
+    @Lob
+    private String description;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public DepartmentEntity() {
 

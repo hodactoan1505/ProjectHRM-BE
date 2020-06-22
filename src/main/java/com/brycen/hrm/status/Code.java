@@ -49,6 +49,11 @@ public class Code {
 	 */
 	public static int project_not_found = 113;
 	
+	 /**
+     * Trả về khi dự án không tồn tại
+     */
+    public static int employee_not_found = 114;
+	
 	/**
 	 * Trả về khi họ tên bằng null hoặc rỗng
 	 */
@@ -68,4 +73,9 @@ public class Code {
 	 * Trả về khi dự án rỗng
 	 */
 	public static int project_not_empty = 132;
+	
+	/**
+	 * Trả về khi danh sách id nhân viên rỗng => hành động xóa
+	 */
+	public static int list_employee_id_empty = 133;
 }
