@@ -4,7 +4,7 @@ public class DepartmentResponse extends BaseResponse {
     private int id;
     private String name;
     private String description;
-    private String startDate;
+    private String startdate;
     private int persions;
 
     public String getDescription() {
@@ -15,12 +15,12 @@ public class DepartmentResponse extends BaseResponse {
         this.description = description;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getStartdate() {
+        return startdate;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartdate(String startdate) {
+        this.startdate = startdate;
     }
 
     public int getPersions() {

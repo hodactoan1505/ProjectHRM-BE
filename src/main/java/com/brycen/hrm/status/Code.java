@@ -67,15 +67,20 @@ public class Code {
 	/**
 	 * Trả về khi phòng ban rỗng
 	 */
-	public static int department_not_empty = 131;
+	public static int department_not_empty = 132;
 	
 	/**
 	 * Trả về khi dự án rỗng
 	 */
-	public static int project_not_empty = 132;
+	public static int project_not_empty = 133;
 	
 	/**
 	 * Trả về khi danh sách id nhân viên rỗng => hành động xóa
 	 */
-	public static int list_employee_id_empty = 133;
+	public static int list_employee_id_empty = 134;
+	
+	
+	
+	public static int skill_already_exist = 141;
+	public static int department_already_exist = 142;
 }

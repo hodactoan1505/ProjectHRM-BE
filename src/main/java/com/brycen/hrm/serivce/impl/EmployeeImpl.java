@@ -118,7 +118,12 @@ public class EmployeeImpl implements EmployeeService {
 			String select = " SELECT DISTINCT  * ";
 			String from = " FROM employee ";
 			String where = " WHERE employee.isdelete = 0 ";
-
+			
+			int id = employeeRequest.getId();
+			if(id != 0) {
+			    where += " and employee.id = " + id;
+			}
+			
 			String name = employeeRequest.getName();
 			if (name != null) {
 				where += " and employee.name like '%" + name + "%'";
@@ -126,7 +131,7 @@ public class EmployeeImpl implements EmployeeService {
 
 			// Tìm kiếm theo department
 			List<DepartmentRequest> reqDepartment = employeeRequest.getDepartment();
-			if (reqDepartment != null) {
+			if (reqDepartment != null && !reqDepartment.isEmpty()) {
 				from += ", department ";
 				where += " and employee.departmentid = department.id "
 						+ " and department.id = " + reqDepartment.get(0).getId();
@@ -134,7 +139,7 @@ public class EmployeeImpl implements EmployeeService {
 
 			// Tìm kiếm theo project
 			List<ProjectRequest> reqProject = employeeRequest.getProject();
-			if (reqProject != null) {
+			if (reqProject != null && !reqProject.isEmpty()) {
 				from += ", project ";
 				where += " and employee.projectid = project.id "
 						+ " and project.id = " + reqProject.get(0).getId();

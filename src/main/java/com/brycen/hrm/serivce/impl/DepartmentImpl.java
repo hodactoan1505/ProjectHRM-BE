@@ -2,6 +2,7 @@ package com.brycen.hrm.serivce.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.brycen.hrm.model.DepartmentEntity;
+import com.brycen.hrm.repository.DepartmentRepository;
 import com.brycen.hrm.request.DepartmentRequest;
 import com.brycen.hrm.request.EmployeeRequest;
 import com.brycen.hrm.response.Response;
@@ -17,6 +19,7 @@ import com.brycen.hrm.response.object.DepartmentResponse;
 import com.brycen.hrm.service.DepartmentService;
 import com.brycen.hrm.status.BaseConvert;
 import com.brycen.hrm.status.Code;
+import com.brycen.hrm.status.Message;
 
 @Service
 public class DepartmentImpl implements DepartmentService {
@@ -26,6 +29,9 @@ public class DepartmentImpl implements DepartmentService {
 
 	@Autowired
 	private EntityManager entityManager;
+	
+	@Autowired
+	private DepartmentRepository departmentRepo;
 
 	/**
 	 * Hàm lấy danh sách phòng ban theo role Nếu trong employeeRequest có object
@@ -66,5 +72,51 @@ public class DepartmentImpl implements DepartmentService {
 		}
 		return response;
 	}
+
+    @Override
+    public Response addDepartment(DepartmentRequest departmentRequest) {
+        Response response = new Response();
+        try {
+            if(departmentRepo.findByName(departmentRequest.getName()) != null) {
+                response.setCode(Code.department_already_exist);
+                response.setMessage(Message.department_already_exist);
+                return response;
+            }
+            
+            DepartmentEntity entity = baseConvert.departmentRequestToEntity(departmentRequest);
+            departmentRepo.save(entity);
+            
+        } catch (Exception e) {
+            response.setCode(Code.unknown);
+            response.setMessage(Message.unknown);
+        }
+        return response;
+    }
+
+    @Override
+    public Response updateDepartment(DepartmentRequest departmentRequest) {
+        Response response = new Response();
+        try {
+            Optional<DepartmentEntity> dOptional = departmentRepo.findById(departmentRequest.getId());
+            
+            if(dOptional.orElse(null) == null) {
+                response.setCode(Code.department_not_found);
+                response.setMessage(Message.department_not_found);
+                return response;
+            }           
+            
+            DepartmentEntity entity = dOptional.get();
+            entity.setDescription(departmentRequest.getDescription());
+            entity.setName(departmentRequest.getName());
+            entity.setStartDate(departmentRequest.getStartdate());
+            
+            departmentRepo.save(entity);
+            
+        } catch (Exception e) {
+            response.setCode(Code.unknown);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
 
 }

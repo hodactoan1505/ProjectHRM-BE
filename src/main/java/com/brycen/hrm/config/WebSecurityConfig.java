@@ -50,8 +50,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/project").permitAll()
 			.antMatchers("/skill").permitAll()
 			.antMatchers("/employee/update").permitAll()
-			.antMatchers("/employee").hasAnyAuthority("admin", "manager", "department", "leader")
+			.antMatchers("/employee").hasAnyAuthority("admin", "manager", "department", "leader","member")
 			.antMatchers("/employee/add").hasAnyAuthority("admin")
+			.antMatchers("/department/add").hasAnyAuthority("admin")
+			.antMatchers("/department/update").hasAnyAuthority("admin")
 			.antMatchers("/employee/delete").hasAnyAuthority("admin")
 			.antMatchers("/user/**").hasAnyAuthority("admin")
 			.anyRequest().denyAll();

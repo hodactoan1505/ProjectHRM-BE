@@ -71,4 +71,7 @@ public class Message {
      * Trả về khi danh sách id của nhân viên xóa không có
      */
     public static String list_employee_id_empty = "Danh sách nhân viên xóa không có";
+    
+    
+    public static String department_already_exist = "Tên phòng ban đã tồn tại";
 }

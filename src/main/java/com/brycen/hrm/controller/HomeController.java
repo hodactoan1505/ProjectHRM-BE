@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brycen.hrm.request.DepartmentRequest;
 import com.brycen.hrm.request.EmployeeRequest;
 import com.brycen.hrm.request.UserRequest;
 import com.brycen.hrm.response.Response;
@@ -130,5 +131,15 @@ public class HomeController {
     @DeleteMapping("/employee/delete")
     public Response deleteEmployee(@RequestBody List<Integer> list) {
         return employeeService.deleteEmployee(list);
+    }
+    
+    @PostMapping("/department/add")
+    public Response addDepartment(@RequestBody DepartmentRequest departmentRequest) {
+        return departmentService.addDepartment(departmentRequest);
+    }
+    
+    @PutMapping("/department/update")
+    public Response updateDepartment(@RequestBody DepartmentRequest departmentRequest) {
+        return departmentService.updateDepartment(departmentRequest);
     }
 }
